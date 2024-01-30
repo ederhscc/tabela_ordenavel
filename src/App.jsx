@@ -12,10 +12,11 @@ function App() {
     { nome: "Sofia", idade: 28, cargo: "Analista" },
   ]);
 
+  const [searchTerm, setSearchTerm] = useState(null)
   return (
     <div className="container">
       <h1>Tabela de Usuários</h1>
-      <SearchBar />
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
       <table>
         <TableHeader />
         <tbody>
