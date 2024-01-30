@@ -49,6 +49,12 @@ function App() {
 
     setSortConfig({ key, direction });
   };
+
+  const filteredData = sortedData.filter(
+    (row) =>
+      row.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      row.cargo.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div className="container">
       <h1>Tabela de Usuários</h1>
@@ -56,7 +62,7 @@ function App() {
       <table>
         <TableHeader onColumnClick={onColumnClick} />
         <tbody>
-          {sortedData.map((row, index) => (
+          {filteredData.map((row, index) => (
             <TableRow key={index} row={row} />
           ))}
         </tbody>
