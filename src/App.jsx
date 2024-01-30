@@ -9,19 +9,54 @@ function App() {
     { nome: "João", idade: 30, cargo: "Desenvolvedor", isHiring: true },
     { nome: "Maria", idade: 22, cargo: "Designer", isHiring: false },
     { nome: "Carlos", idade: 40, cargo: "Gerente", isHiring: false },
-    { nome: "Sofia", idade: 28, cargo: "Analista", isHiring: false },{ nome: "Rafaela", idade: 18, cargo: "Enfermeira", isHiring: true },
+    { nome: "Sofia", idade: 28, cargo: "Analista", isHiring: false },
+    { nome: "Rafaela", idade: 18, cargo: "Enfermeira", isHiring: true },
     { nome: "Mariana", idade: 20, cargo: "Matemática", isHiring: true },
   ]);
 
-  const [searchTerm, setSearchTerm] = useState(null)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortConfig, setSortConfig] = useState(null);
+
+  const sortedData = [...data].sort((a, b) => {
+    if (sortConfig !== null) {
+      if (typeof a[sortConfig.key] === "number") {
+        // Se for número
+        return sortConfig.direction === "ascending"
+          ? a[sortConfig.key] - b[sortConfig.key]
+          : b[sortConfig.key] - a[sortConfig.key];
+      } else {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? 1 : -1;
+        }
+      }
+    }
+    return 0;
+  });
+
+  const onColumnClick = (key) => {
+    let direction = "ascending";
+
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "ascending"
+    ) {
+      direction = "descending";
+    }
+
+    setSortConfig({ key, direction });
+  };
   return (
     <div className="container">
       <h1>Tabela de Usuários</h1>
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <table>
-        <TableHeader />
+        <TableHeader onColumnClick={onColumnClick} />
         <tbody>
-          {data.map((row, index) => (
+          {sortedData.map((row, index) => (
             <TableRow key={index} row={row} />
           ))}
         </tbody>
